@@ -227,6 +227,7 @@
     font-size:12px;
     color:var(--muted);
     line-height:1.5;
+    text-align:center;
   }
 
   @media (max-width: 720px){
@@ -276,6 +277,8 @@
       <text class="quadrant-label" x="145" y="460">Earlier internal capability</text>
       <text class="quadrant-label" x="610" y="460">More developed capability</text>
 
+      <g id="haloLayer"></g>
+
       <g class="node A" data-model="A" transform="translate(300,330)" onclick="selectModel('A')">
         <circle r="40"></circle>
         <text>A</text>
@@ -309,13 +312,17 @@
     <div class="legend-item"><span class="swatch" style="background:#2557d6"></span> Model D</div>
   </div>
 
+  <div class="note" style="margin-top:6px;">
+    Soft halos indicate the relative weight of <strong>ACF</strong> (blue), <strong>Programme Management</strong> (amber), and <strong>Engineering</strong> (green) within the selected model.
+  </div>
+
   <div class="slider-box">
     <div class="slider-head">
       <div class="slider-title">ACF capability over time</div>
       <div class="slider-label" id="sliderLabel">Current assumption: developing capability</div>
     </div>
 
-    <input type="range" min="1" max="5" step="1" value="3" id="slider">
+    <input type="range" min="1" max="4" step="1" value="2" id="slider">
 
     <div class="bars" id="bars"></div>
 
@@ -328,18 +335,31 @@
 
 <script>
   const fitData = {
-    A: [72, 64, 52, 40, 28],
-    B: [24, 40, 56, 70, 80],
-    C: [10, 18, 34, 56, 82],
-    D: [42, 60, 78, 88, 94]
+    A: [64, 52, 40, 28],
+    B: [40, 56, 70, 80],
+    C: [18, 34, 56, 82],
+    D: [60, 78, 88, 94]
   };
 
   const capabilityLabels = {
-    1: "Current assumption: early-stage capability",
-    2: "Current assumption: emerging capability",
-    3: "Current assumption: developing capability",
-    4: "Current assumption: strong capability",
-    5: "Current assumption: mature capability"
+    1: "Current assumption: emerging capability",
+    2: "Current assumption: developing capability",
+    3: "Current assumption: strong capability",
+    4: "Current assumption: mature capability"
+  };
+
+  const roleHalos = {
+    A: { acf: 52, pm: 74, eng: 60 },
+    B: { acf: 58, pm: 42, eng: 78 },
+    C: { acf: 82, pm: 38, eng: 36 },
+    D: { acf: 78, pm: 58, eng: 56 }
+  };
+
+  const modelPositions = {
+    A: { x: 300, y: 330 },
+    B: { x: 430, y: 285 },
+    C: { x: 720, y: 165 },
+    D: { x: 645, y: 215 }
   };
 
   function fitText(value){
@@ -386,6 +406,35 @@
     });
   }
 
+  function drawHalos(model) {
+    const haloLayer = document.getElementById("haloLayer");
+    haloLayer.innerHTML = "";
+
+    if (model === "ALL") return;
+
+    const pos = modelPositions[model];
+    const halos = roleHalos[model];
+
+    const haloData = [
+      { r: halos.acf, fill: "rgba(37,87,214,0.10)", stroke: "rgba(37,87,214,0.28)" },
+      { r: halos.pm,  fill: "rgba(201,122,18,0.10)", stroke: "rgba(201,122,18,0.28)" },
+      { r: halos.eng, fill: "rgba(31,156,82,0.10)", stroke: "rgba(31,156,82,0.28)" }
+    ];
+
+    haloData
+      .sort((a, b) => b.r - a.r)
+      .forEach(h => {
+        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        c.setAttribute("cx", pos.x);
+        c.setAttribute("cy", pos.y);
+        c.setAttribute("r", h.r);
+        c.setAttribute("fill", h.fill);
+        c.setAttribute("stroke", h.stroke);
+        c.setAttribute("stroke-width", "1.5");
+        haloLayer.appendChild(c);
+      });
+  }
+
   function selectModel(model, btn=null){
     const nodes = document.querySelectorAll(".node");
     const buttons = document.querySelectorAll(".controls button");
@@ -405,13 +454,16 @@
       const targetButton = Array.from(buttons).find(b => b.textContent.includes(model));
       if (targetButton) targetButton.classList.add("active");
     }
+
+    drawHalos(model);
   }
 
   document.getElementById("slider").addEventListener("input", (e) => {
     renderBars(parseInt(e.target.value, 10));
   });
 
-  renderBars(3);
+  renderBars(2);
+  drawHalos("D");
 </script>
 </body>
 </html>
