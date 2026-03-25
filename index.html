@@ -403,41 +403,41 @@
     });
   }
 
-  function drawHalos(model) {
-    const haloLayer = document.getElementById("haloLayer");
-    haloLayer.innerHTML = "";
-    if (model === "ALL") return;
+function drawHalos(model) {
+  const haloLayer = document.getElementById("haloLayer");
+  haloLayer.innerHTML = "";
+  if (model === "ALL") return;
 
-    const pos = modelPositions[model];
-    const halos = roleHalos[model];
+  const pos = modelPositions[model];
+  const halos = roleHalos[model];
 
-    const values = [halos.acf, halos.pm, halos.eng];
-    const max = Math.max(...values);
-    const min = Math.min(...values);
+  const values = [halos.acf, halos.pm, halos.eng];
+  const max = Math.max(...values);
+  const min = Math.min(...values);
 
-    function opacityFor(value){
-      if (max === min) return 0.16;
-      const t = (value - min) / (max - min);
-      return 0.08 + t * 0.14;
-    }
-
-    const haloData = [
-      { r: halos.acf, fill: `rgba(37,87,214,${opacityFor(halos.acf)})` },
-      { r: halos.pm,  fill: `rgba(201,122,18,${opacityFor(halos.pm)})` },
-      { r: halos.eng, fill: `rgba(31,156,82,${opacityFor(halos.eng)})` }
-    ];
-
-    haloData
-      .sort((a, b) => b.r - a.r)
-      .forEach(h => {
-        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        c.setAttribute("cx", pos.x);
-        c.setAttribute("cy", pos.y);
-        c.setAttribute("r", h.r);
-        c.setAttribute("fill", h.fill);
-        haloLayer.appendChild(c);
-      });
+  function opacityFor(value){
+    if (max === min) return 0.18;
+    const t = (value - min) / (max - min);
+    return 0.04 + t * 0.28;
   }
+
+  const haloData = [
+    { r: halos.acf, fill: `rgba(37,87,214,${opacityFor(halos.acf)})` },
+    { r: halos.pm,  fill: `rgba(201,122,18,${opacityFor(halos.pm)})` },
+    { r: halos.eng, fill: `rgba(31,156,82,${opacityFor(halos.eng)})` }
+  ];
+
+  haloData
+    .sort((a, b) => b.r - a.r)
+    .forEach(h => {
+      const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("cx", pos.x);
+      c.setAttribute("cy", pos.y);
+      c.setAttribute("r", h.r);
+      c.setAttribute("fill", h.fill);
+      haloLayer.appendChild(c);
+    });
+}
 
   function clearHalos() {
     document.getElementById("haloLayer").innerHTML = "";
