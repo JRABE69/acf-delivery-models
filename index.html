@@ -12,29 +12,26 @@ body {
   background: white;
 }
 
-/* Container */
 .container {
-  width: 100%;
   max-width: 1100px;
-  margin: 0 auto;
-  padding: 10px;
+  margin: auto;
+  padding: 20px;
 }
 
 /* Buttons */
 .controls {
   display: flex;
-  gap: 8px;
   justify-content: center;
+  gap: 10px;
   margin-bottom: 10px;
 }
 
 button {
   border: 1px solid #ccc;
   background: white;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 20px;
   cursor: pointer;
-  font-size: 12px;
 }
 
 button.active {
@@ -51,7 +48,6 @@ svg {
 /* Nodes */
 .node {
   cursor: pointer;
-  transition: 0.2s;
 }
 
 .node circle {
@@ -66,14 +62,29 @@ svg {
   dominant-baseline: middle;
 }
 
-/* Colors */
 .A { fill: #c97a12; }
 .B { fill: #9f5a0f; }
 .C { fill: #1f9c52; }
 .D { fill: #2557d6; }
 
-.dim {
-  opacity: 0.25;
+.dim { opacity: 0.25; }
+
+/* Slider */
+.slider-box {
+  margin-top: 20px;
+}
+
+.bar {
+  height: 10px;
+  background: #eee;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  border-radius: 5px;
 }
 </style>
 </head>
@@ -82,64 +93,92 @@ svg {
 
 <div class="container">
 
-  <div class="controls">
-    <button onclick="selectModel('A')">A</button>
-    <button onclick="selectModel('B')">B</button>
-    <button onclick="selectModel('C')">C</button>
-    <button class="active" onclick="selectModel('D')">D</button>
-    <button onclick="selectModel('ALL')">All</button>
-  </div>
+<div class="controls">
+<button onclick="selectModel('A')">A</button>
+<button onclick="selectModel('B')">B</button>
+<button onclick="selectModel('C')">C</button>
+<button class="active" onclick="selectModel('D')">D</button>
+<button onclick="selectModel('ALL')">All</button>
+</div>
 
-  <svg viewBox="0 0 800 500">
+<svg viewBox="0 0 800 500">
 
-    <!-- Axes -->
-    <line x1="80" y1="420" x2="750" y2="420" stroke="#aaa"/>
-    <line x1="80" y1="420" x2="80" y2="60" stroke="#aaa"/>
+<!-- axes -->
+<line x1="80" y1="420" x2="750" y2="420" stroke="#aaa"/>
+<line x1="80" y1="420" x2="80" y2="60" stroke="#aaa"/>
 
-    <!-- Labels -->
-    <text x="400" y="470" font-size="14" fill="#555">ACF capability</text>
-    <text x="10" y="250" transform="rotate(-90 10 250)" font-size="14" fill="#555">ACF control</text>
+<text x="400" y="470">ACF capability</text>
+<text x="10" y="250" transform="rotate(-90 10 250)">ACF control</text>
 
-    <!-- Points -->
-    <g class="node A" data="A" transform="translate(250,300)" onclick="selectModel('A')">
-      <circle r="30"></circle>
-      <text>A</text>
-    </g>
+<!-- nodes -->
+<g class="node A" data="A" transform="translate(250,300)" onclick="selectModel('A')">
+<circle r="30"></circle><text>A</text></g>
 
-    <g class="node B" data="B" transform="translate(400,260)" onclick="selectModel('B')">
-      <circle r="30"></circle>
-      <text>B</text>
-    </g>
+<g class="node B" data="B" transform="translate(400,260)" onclick="selectModel('B')">
+<circle r="30"></circle><text>B</text></g>
 
-    <g class="node C" data="C" transform="translate(650,120)" onclick="selectModel('C')">
-      <circle r="30"></circle>
-      <text>C</text>
-    </g>
+<g class="node C" data="C" transform="translate(650,120)" onclick="selectModel('C')">
+<circle r="30"></circle><text>C</text></g>
 
-    <g class="node D" data="D" transform="translate(580,180)" onclick="selectModel('D')">
-      <circle r="30"></circle>
-      <text>D</text>
-    </g>
+<g class="node D" data="D" transform="translate(580,180)" onclick="selectModel('D')">
+<circle r="30"></circle><text>D</text></g>
 
-  </svg>
+</svg>
+
+<div class="slider-box">
+<div><strong>ACF capability over time</strong></div>
+<input type="range" min="1" max="5" value="3" id="slider">
+
+<div id="bars"></div>
+</div>
 
 </div>
 
 <script>
-function selectModel(model) {
-  const nodes = document.querySelectorAll(".node");
-  const buttons = document.querySelectorAll("button");
 
-  nodes.forEach(n => {
-    n.classList.remove("dim");
-    if (model !== "ALL" && n.getAttribute("data") !== model) {
-      n.classList.add("dim");
-    }
-  });
+const data = {
+A:[70,60,50,40,30],
+B:[20,40,55,70,80],
+C:[10,20,35,60,85],
+D:[40,60,80,90,95]
+};
 
-  buttons.forEach(b => b.classList.remove("active"));
-  event.target.classList.add("active");
+function selectModel(model){
+document.querySelectorAll(".node").forEach(n=>{
+n.classList.remove("dim");
+if(model!=="ALL" && n.getAttribute("data")!==model){
+n.classList.add("dim");
 }
+});
+}
+
+function render(level){
+const bars=document.getElementById("bars");
+bars.innerHTML="";
+["A","B","C","D"].forEach(m=>{
+let v=data[m][level-1];
+bars.innerHTML+=`
+<div>${m}: ${v}%</div>
+<div class="bar"><span style="width:${v}%; background:${getColor(m)}"></span></div>
+`;
+});
+}
+
+function getColor(m){
+return {
+A:"#c97a12",
+B:"#9f5a0f",
+C:"#1f9c52",
+D:"#2557d6"
+}[m];
+}
+
+document.getElementById("slider").oninput=(e)=>{
+render(e.target.value);
+};
+
+render(3);
+
 </script>
 
 </body>
