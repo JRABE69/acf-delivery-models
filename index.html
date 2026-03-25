@@ -4,182 +4,414 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ACF Delivery Models</title>
-
 <style>
-body {
-  margin: 0;
-  font-family: Inter, Arial, sans-serif;
-  background: white;
-}
+  :root{
+    --bg:#ffffff;
+    --text:#17202b;
+    --muted:#667085;
+    --line:#d9dee7;
+    --blue:#2557d6;
+    --a:#c97a12;
+    --b:#9f5a0f;
+    --c:#1f9c52;
+    --d:#2557d6;
+    --green:#1f9c52;
+    --amber:#c97a12;
+    --red:#c2410c;
+  }
 
-.container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 20px;
-}
+  * { box-sizing: border-box; }
 
-/* Buttons */
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
+  body{
+    margin:0;
+    font-family: Inter, Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
 
-button {
-  border: 1px solid #ccc;
-  background: white;
-  padding: 6px 12px;
-  border-radius: 20px;
-  cursor: pointer;
-}
+  .container{
+    max-width:1100px;
+    margin:0 auto;
+    padding:18px 20px 24px;
+  }
 
-button.active {
-  background: #2557d6;
-  color: white;
-}
+  .controls{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
 
-/* SVG */
-svg {
-  width: 100%;
-  height: auto;
-}
+  button{
+    border:1px solid var(--line);
+    background:#fff;
+    padding:7px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.18s ease;
+    color:var(--text);
+  }
 
-/* Nodes */
-.node {
-  cursor: pointer;
-}
+  button:hover{
+    transform:translateY(-1px);
+  }
 
-.node circle {
-  stroke: white;
-  stroke-width: 3;
-}
+  button.active{
+    background:var(--blue);
+    color:#fff;
+    border-color:var(--blue);
+  }
 
-.node text {
-  fill: white;
-  font-weight: bold;
-  text-anchor: middle;
-  dominant-baseline: middle;
-}
+  .chart-wrap{
+    width:100%;
+  }
 
-.A { fill: #c97a12; }
-.B { fill: #9f5a0f; }
-.C { fill: #1f9c52; }
-.D { fill: #2557d6; }
+  svg{
+    width:100%;
+    height:auto;
+    display:block;
+  }
 
-.dim { opacity: 0.25; }
+  .grid-line{
+    stroke:#e7ebf1;
+    stroke-width:1;
+  }
 
-/* Slider */
-.slider-box {
-  margin-top: 20px;
-}
+  .axis-line{
+    stroke:#98a2b3;
+    stroke-width:1.5;
+  }
 
-.bar {
-  height: 10px;
-  background: #eee;
-  border-radius: 5px;
-  margin: 5px 0;
-}
+  .axis-label{
+    fill:var(--muted);
+    font-size:15px;
+    font-weight:700;
+  }
 
-.bar span {
-  display: block;
-  height: 100%;
-  border-radius: 5px;
-}
+  .axis-sub{
+    fill:var(--muted);
+    font-size:12px;
+  }
+
+  .quadrant-label{
+    fill:#98a2b3;
+    font-size:12px;
+    font-weight:700;
+  }
+
+  .model-callout{
+    fill:var(--text);
+    font-size:12px;
+    font-weight:700;
+  }
+
+  .node{
+    cursor:pointer;
+    transition:.2s ease;
+  }
+
+  .node circle{
+    stroke:#fff;
+    stroke-width:4;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,.14));
+  }
+
+  .node text{
+    fill:#fff;
+    font-weight:800;
+    font-size:16px;
+    text-anchor:middle;
+    dominant-baseline:middle;
+    pointer-events:none;
+  }
+
+  .A circle{ fill:var(--a); }
+  .B circle{ fill:var(--b); }
+  .C circle{ fill:var(--c); }
+  .D circle{ fill:var(--d); }
+
+  .node.dim{
+    opacity:.24;
+  }
+
+  .legend{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:8px;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  .legend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .swatch{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    display:inline-block;
+  }
+
+  .slider-box{
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px solid #edf0f5;
+  }
+
+  .slider-head{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    align-items:center;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
+
+  .slider-title{
+    font-size:14px;
+    font-weight:800;
+  }
+
+  .slider-label{
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  input[type="range"]{
+    width:100%;
+    margin:2px 0 10px 0;
+  }
+
+  .bars{
+    display:grid;
+    gap:10px;
+  }
+
+  .bar-row{
+    display:grid;
+    grid-template-columns:84px 1fr 130px;
+    gap:12px;
+    align-items:center;
+    font-size:13px;
+  }
+
+  .bar-track{
+    height:10px;
+    background:#eceff3;
+    border-radius:999px;
+    overflow:hidden;
+  }
+
+  .bar-fill{
+    display:block;
+    height:100%;
+    border-radius:999px;
+  }
+
+  .fit-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--muted);
+    text-align:left;
+  }
+
+  .note{
+    margin-top:12px;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.5;
+  }
+
+  @media (max-width: 720px){
+    .bar-row{
+      grid-template-columns:70px 1fr 110px;
+      gap:8px;
+    }
+  }
 </style>
 </head>
-
 <body>
-
 <div class="container">
 
-<div class="controls">
-<button onclick="selectModel('A')">A</button>
-<button onclick="selectModel('B')">B</button>
-<button onclick="selectModel('C')">C</button>
-<button class="active" onclick="selectModel('D')">D</button>
-<button onclick="selectModel('ALL')">All</button>
-</div>
+  <div class="controls">
+    <button onclick="selectModel('A', this)">Model A</button>
+    <button onclick="selectModel('B', this)">Model B</button>
+    <button onclick="selectModel('C', this)">Model C</button>
+    <button class="active" onclick="selectModel('D', this)">Model D</button>
+    <button onclick="selectModel('ALL', this)">Show all</button>
+  </div>
 
-<svg viewBox="0 0 800 500">
+  <div class="chart-wrap">
+    <svg viewBox="0 0 920 620" aria-label="Delivery models chart">
+      <line class="grid-line" x1="120" y1="120" x2="820" y2="120"></line>
+      <line class="grid-line" x1="120" y1="240" x2="820" y2="240"></line>
+      <line class="grid-line" x1="120" y1="360" x2="820" y2="360"></line>
+      <line class="grid-line" x1="120" y1="480" x2="820" y2="480"></line>
 
-<!-- axes -->
-<line x1="80" y1="420" x2="750" y2="420" stroke="#aaa"/>
-<line x1="80" y1="420" x2="80" y2="60" stroke="#aaa"/>
+      <line class="grid-line" x1="120" y1="480" x2="120" y2="120"></line>
+      <line class="grid-line" x1="353" y1="480" x2="353" y2="120"></line>
+      <line class="grid-line" x1="586" y1="480" x2="586" y2="120"></line>
+      <line class="grid-line" x1="820" y1="480" x2="820" y2="120"></line>
 
-<text x="400" y="470">ACF capability</text>
-<text x="10" y="250" transform="rotate(-90 10 250)">ACF control</text>
+      <line class="axis-line" x1="120" y1="480" x2="850" y2="480"></line>
+      <line class="axis-line" x1="120" y1="480" x2="120" y2="90"></line>
 
-<!-- nodes -->
-<g class="node A" data="A" transform="translate(250,300)" onclick="selectModel('A')">
-<circle r="30"></circle><text>A</text></g>
+      <text class="axis-label" x="470" y="560" text-anchor="middle">ACF capability</text>
+      <text class="axis-sub" x="120" y="585" text-anchor="start">Lower</text>
+      <text class="axis-sub" x="820" y="585" text-anchor="end">Higher</text>
 
-<g class="node B" data="B" transform="translate(400,260)" onclick="selectModel('B')">
-<circle r="30"></circle><text>B</text></g>
+      <text class="axis-label" x="36" y="300" text-anchor="middle" transform="rotate(-90 36 300)">ACF strategic control</text>
+      <text class="axis-sub" x="54" y="478" text-anchor="middle">Lower</text>
+      <text class="axis-sub" x="54" y="120" text-anchor="middle">Higher</text>
 
-<g class="node C" data="C" transform="translate(650,120)" onclick="selectModel('C')">
-<circle r="30"></circle><text>C</text></g>
+      <text class="quadrant-label" x="180" y="145">Externally driven</text>
+      <text class="quadrant-label" x="635" y="145">ACF-led</text>
+      <text class="quadrant-label" x="145" y="460">Earlier internal capability</text>
+      <text class="quadrant-label" x="610" y="460">More developed capability</text>
 
-<g class="node D" data="D" transform="translate(580,180)" onclick="selectModel('D')">
-<circle r="30"></circle><text>D</text></g>
+      <g class="node A" data-model="A" transform="translate(300,330)" onclick="selectModel('A')">
+        <circle r="40"></circle>
+        <text>A</text>
+      </g>
+      <text class="model-callout" x="300" y="385" text-anchor="middle">PM-led</text>
 
-</svg>
+      <g class="node B" data-model="B" transform="translate(430,285)" onclick="selectModel('B')">
+        <circle r="40"></circle>
+        <text>B</text>
+      </g>
+      <text class="model-callout" x="430" y="340" text-anchor="middle">Engineering-led</text>
 
-<div class="slider-box">
-<div><strong>ACF capability over time</strong></div>
-<input type="range" min="1" max="5" value="3" id="slider">
+      <g class="node C" data-model="C" transform="translate(720,165)" onclick="selectModel('C')">
+        <circle r="40"></circle>
+        <text>C</text>
+      </g>
+      <text class="model-callout" x="720" y="220" text-anchor="middle">Full corporation</text>
 
-<div id="bars"></div>
-</div>
+      <g class="node D" data-model="D" transform="translate(645,215)" onclick="selectModel('D')">
+        <circle r="40"></circle>
+        <text>D</text>
+      </g>
+      <text class="model-callout" x="645" y="270" text-anchor="middle">Hybrid</text>
+    </svg>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="swatch" style="background:#c97a12"></span> Model A</div>
+    <div class="legend-item"><span class="swatch" style="background:#9f5a0f"></span> Model B</div>
+    <div class="legend-item"><span class="swatch" style="background:#1f9c52"></span> Model C</div>
+    <div class="legend-item"><span class="swatch" style="background:#2557d6"></span> Model D</div>
+  </div>
+
+  <div class="slider-box">
+    <div class="slider-head">
+      <div class="slider-title">ACF capability over time</div>
+      <div class="slider-label" id="sliderLabel">Current assumption: developing capability</div>
+    </div>
+
+    <input type="range" min="1" max="5" step="1" value="3" id="slider">
+
+    <div class="bars" id="bars"></div>
+
+    <div class="note">
+      The slider is a strategic thought tool. It illustrates how the relative fit of each model changes as ACF capability develops over time.
+    </div>
+  </div>
 
 </div>
 
 <script>
+  const fitData = {
+    A: [72, 64, 52, 40, 28],
+    B: [24, 40, 56, 70, 80],
+    C: [10, 18, 34, 56, 82],
+    D: [42, 60, 78, 88, 94]
+  };
 
-const data = {
-A:[70,60,50,40,30],
-B:[20,40,55,70,80],
-C:[10,20,35,60,85],
-D:[40,60,80,90,95]
-};
+  const capabilityLabels = {
+    1: "Current assumption: early-stage capability",
+    2: "Current assumption: emerging capability",
+    3: "Current assumption: developing capability",
+    4: "Current assumption: strong capability",
+    5: "Current assumption: mature capability"
+  };
 
-function selectModel(model){
-document.querySelectorAll(".node").forEach(n=>{
-n.classList.remove("dim");
-if(model!=="ALL" && n.getAttribute("data")!==model){
-n.classList.add("dim");
-}
-});
-}
+  function fitText(value){
+    if (value >= 80) return "Very strong fit";
+    if (value >= 60) return "Strong fit";
+    if (value >= 45) return "Moderate fit";
+    if (value >= 30) return "Selective fit";
+    return "Limited fit";
+  }
 
-function render(level){
-const bars=document.getElementById("bars");
-bars.innerHTML="";
-["A","B","C","D"].forEach(m=>{
-let v=data[m][level-1];
-bars.innerHTML+=`
-<div>${m}: ${v}%</div>
-<div class="bar"><span style="width:${v}%; background:${getColor(m)}"></span></div>
-`;
-});
-}
+  function fitColor(value){
+    if (value >= 60) return "#1f9c52";
+    if (value >= 35) return "#c97a12";
+    return "#c2410c";
+  }
 
-function getColor(m){
-return {
-A:"#c97a12",
-B:"#9f5a0f",
-C:"#1f9c52",
-D:"#2557d6"
-}[m];
-}
+  function barColor(model){
+    return {
+      A:"#c97a12",
+      B:"#9f5a0f",
+      C:"#1f9c52",
+      D:"#2557d6"
+    }[model];
+  }
 
-document.getElementById("slider").oninput=(e)=>{
-render(e.target.value);
-};
+  function renderBars(level){
+    const bars = document.getElementById("bars");
+    const label = document.getElementById("sliderLabel");
+    label.textContent = capabilityLabels[level];
+    bars.innerHTML = "";
 
-render(3);
+    ["A","B","C","D"].forEach(model => {
+      const value = fitData[model][level - 1];
+      const row = document.createElement("div");
+      row.className = "bar-row";
+      row.innerHTML = `
+        <div><strong>Model ${model}</strong></div>
+        <div class="bar-track">
+          <span class="bar-fill" style="width:${value}%; background:${barColor(model)};"></span>
+        </div>
+        <div class="fit-label" style="color:${fitColor(value)}">${fitText(value)}</div>
+      `;
+      bars.appendChild(row);
+    });
+  }
 
+  function selectModel(model, btn=null){
+    const nodes = document.querySelectorAll(".node");
+    const buttons = document.querySelectorAll(".controls button");
+
+    nodes.forEach(node => {
+      node.classList.remove("dim");
+      if (model !== "ALL" && node.getAttribute("data-model") !== model) {
+        node.classList.add("dim");
+      }
+    });
+
+    buttons.forEach(b => b.classList.remove("active"));
+
+    if (btn) {
+      btn.classList.add("active");
+    } else {
+      const targetButton = Array.from(buttons).find(b => b.textContent.includes(model));
+      if (targetButton) targetButton.classList.add("active");
+    }
+  }
+
+  document.getElementById("slider").addEventListener("input", (e) => {
+    renderBars(parseInt(e.target.value, 10));
+  });
+
+  renderBars(3);
 </script>
-
 </body>
 </html>
