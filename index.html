@@ -3,14 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ACF Delivery Models</title>
+<title>ACF Delivery Models – Control vs Capability</title>
 <style>
   :root{
     --bg:#ffffff;
     --text:#17202b;
     --muted:#667085;
-    --line:#d9dee7;
-    --blue:#2557d6;
     --a:#c97a12;
     --b:#9f5a0f;
     --c:#1f9c52;
@@ -29,40 +27,7 @@
   .container{
     max-width:1100px;
     margin:0 auto;
-    padding:18px 20px 24px;
-  }
-
-  .controls{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:12px;
-  }
-
-  button{
-    border:1px solid var(--line);
-    background:#fff;
-    padding:7px 14px;
-    border-radius:999px;
-    cursor:pointer;
-    font-size:13px;
-    transition:.18s ease;
-    color:var(--text);
-  }
-
-  button:hover{
-    transform:translateY(-1px);
-  }
-
-  button.active{
-    background:var(--blue);
-    color:#fff;
-    border-color:var(--blue);
-  }
-
-  .chart-wrap{
-    width:100%;
+    padding:18px 20px 20px;
   }
 
   svg{
@@ -129,10 +94,6 @@
   .C circle{ fill:var(--c); }
   .D circle{ fill:var(--d); }
 
-  .node.dim{
-    opacity:.24;
-  }
-
   .legend{
     display:flex;
     gap:16px;
@@ -156,151 +117,71 @@
     display:inline-block;
   }
 
-  .slider-box{
-    margin-top:18px;
-    padding-top:16px;
-    border-top:1px solid #edf0f5;
-  }
-
-  .slider-head{
-    display:flex;
-    justify-content:space-between;
-    gap:12px;
-    align-items:center;
-    margin-bottom:8px;
-    flex-wrap:wrap;
-  }
-
-  .slider-title{
-    font-size:14px;
-    font-weight:800;
-  }
-
-  .slider-label{
-    font-size:12px;
-    color:var(--muted);
-  }
-
-  input[type="range"]{
-    width:100%;
-    margin:2px 0 10px 0;
-  }
-
-  .bars{
-    display:grid;
-    gap:10px;
-  }
-
-  .bar-row{
-    display:grid;
-    grid-template-columns:84px 1fr 130px;
-    gap:12px;
-    align-items:center;
-    font-size:13px;
-  }
-
-  .bar-track{
-    height:10px;
-    background:#eceff3;
-    border-radius:999px;
-    overflow:hidden;
-  }
-
-  .bar-fill{
-    display:block;
-    height:100%;
-    border-radius:999px;
-  }
-
-  .fit-label{
-    font-size:12px;
-    font-weight:700;
-    color:var(--muted);
-    text-align:left;
-  }
-
   .note{
-    margin-top:12px;
+    margin-top:10px;
     font-size:12px;
     color:var(--muted);
     line-height:1.5;
     text-align:center;
-  }
-
-  @media (max-width: 720px){
-    .bar-row{
-      grid-template-columns:70px 1fr 110px;
-      gap:8px;
-    }
   }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <div class="controls">
-    <button onclick="selectModel('A', this)">Model A</button>
-    <button onclick="selectModel('B', this)">Model B</button>
-    <button onclick="selectModel('C', this)">Model C</button>
-    <button class="active" onclick="selectModel('D', this)">Model D</button>
-    <button onclick="selectModel('ALL', this)">Show all</button>
-  </div>
+  <svg viewBox="0 0 920 620" aria-label="Delivery models chart">
+    <line class="grid-line" x1="120" y1="120" x2="820" y2="120"></line>
+    <line class="grid-line" x1="120" y1="240" x2="820" y2="240"></line>
+    <line class="grid-line" x1="120" y1="360" x2="820" y2="360"></line>
+    <line class="grid-line" x1="120" y1="480" x2="820" y2="480"></line>
 
-  <div class="chart-wrap">
-    <svg viewBox="0 0 920 620" aria-label="Delivery models chart">
-      <line class="grid-line" x1="120" y1="120" x2="820" y2="120"></line>
-      <line class="grid-line" x1="120" y1="240" x2="820" y2="240"></line>
-      <line class="grid-line" x1="120" y1="360" x2="820" y2="360"></line>
-      <line class="grid-line" x1="120" y1="480" x2="820" y2="480"></line>
+    <line class="grid-line" x1="120" y1="480" x2="120" y2="120"></line>
+    <line class="grid-line" x1="353" y1="480" x2="353" y2="120"></line>
+    <line class="grid-line" x1="586" y1="480" x2="586" y2="120"></line>
+    <line class="grid-line" x1="820" y1="480" x2="820" y2="120"></line>
 
-      <line class="grid-line" x1="120" y1="480" x2="120" y2="120"></line>
-      <line class="grid-line" x1="353" y1="480" x2="353" y2="120"></line>
-      <line class="grid-line" x1="586" y1="480" x2="586" y2="120"></line>
-      <line class="grid-line" x1="820" y1="480" x2="820" y2="120"></line>
+    <line class="axis-line" x1="120" y1="480" x2="850" y2="480"></line>
+    <line class="axis-line" x1="120" y1="480" x2="120" y2="90"></line>
 
-      <line class="axis-line" x1="120" y1="480" x2="850" y2="480"></line>
-      <line class="axis-line" x1="120" y1="480" x2="120" y2="90"></line>
+    <text class="axis-label" x="470" y="560" text-anchor="middle">ACF capability</text>
+    <text class="axis-sub" x="120" y="585" text-anchor="start">Lower</text>
+    <text class="axis-sub" x="820" y="585" text-anchor="end">Higher</text>
 
-      <text class="axis-label" x="470" y="560" text-anchor="middle">ACF capability</text>
-      <text class="axis-sub" x="120" y="585" text-anchor="start">Lower</text>
-      <text class="axis-sub" x="820" y="585" text-anchor="end">Higher</text>
+    <text class="axis-label" x="36" y="300" text-anchor="middle" transform="rotate(-90 36 300)">ACF strategic control</text>
+    <text class="axis-sub" x="54" y="478" text-anchor="middle">Lower</text>
+    <text class="axis-sub" x="54" y="120" text-anchor="middle">Higher</text>
 
-      <text class="axis-label" x="36" y="300" text-anchor="middle" transform="rotate(-90 36 300)">ACF strategic control</text>
-      <text class="axis-sub" x="54" y="478" text-anchor="middle">Lower</text>
-      <text class="axis-sub" x="54" y="120" text-anchor="middle">Higher</text>
+    <text class="quadrant-label" x="180" y="145">Externally driven</text>
+    <text class="quadrant-label" x="635" y="145">ACF-led</text>
+    <text class="quadrant-label" x="145" y="460">Earlier internal capability</text>
+    <text class="quadrant-label" x="610" y="460">More developed capability</text>
 
-      <text class="quadrant-label" x="180" y="145">Externally driven</text>
-      <text class="quadrant-label" x="635" y="145">ACF-led</text>
-      <text class="quadrant-label" x="145" y="460">Earlier internal capability</text>
-      <text class="quadrant-label" x="610" y="460">More developed capability</text>
+    <g id="haloLayer"></g>
 
-      <g id="haloLayer"></g>
+    <g class="node A" data-model="A" transform="translate(300,330)">
+      <circle r="40"></circle>
+      <text>A</text>
+    </g>
+    <text class="model-callout" x="300" y="385" text-anchor="middle">PM-led</text>
 
-      <g class="node A" data-model="A" transform="translate(300,330)" onclick="selectModel('A')">
-        <circle r="40"></circle>
-        <text>A</text>
-      </g>
-      <text class="model-callout" x="300" y="385" text-anchor="middle">PM-led</text>
+    <g class="node B" data-model="B" transform="translate(430,285)">
+      <circle r="40"></circle>
+      <text>B</text>
+    </g>
+    <text class="model-callout" x="430" y="340" text-anchor="middle">Engineering-led</text>
 
-      <g class="node B" data-model="B" transform="translate(430,285)" onclick="selectModel('B')">
-        <circle r="40"></circle>
-        <text>B</text>
-      </g>
-      <text class="model-callout" x="430" y="340" text-anchor="middle">Engineering-led</text>
+    <g class="node C" data-model="C" transform="translate(720,165)">
+      <circle r="40"></circle>
+      <text>C</text>
+    </g>
+    <text class="model-callout" x="720" y="220" text-anchor="middle">Full corporation</text>
 
-      <g class="node C" data-model="C" transform="translate(720,165)" onclick="selectModel('C')">
-        <circle r="40"></circle>
-        <text>C</text>
-      </g>
-      <text class="model-callout" x="720" y="220" text-anchor="middle">Full corporation</text>
-
-      <g class="node D" data-model="D" transform="translate(645,215)" onclick="selectModel('D')">
-        <circle r="40"></circle>
-        <text>D</text>
-      </g>
-      <text class="model-callout" x="645" y="270" text-anchor="middle">Hybrid</text>
-    </svg>
-  </div>
+    <g class="node D" data-model="D" transform="translate(645,215)">
+      <circle r="40"></circle>
+      <text>D</text>
+    </g>
+    <text class="model-callout" x="645" y="270" text-anchor="middle">Hybrid</text>
+  </svg>
 
   <div class="legend">
     <div class="legend-item"><span class="swatch" style="background:#c97a12"></span> Model A</div>
@@ -309,42 +190,13 @@
     <div class="legend-item"><span class="swatch" style="background:#2557d6"></span> Model D</div>
   </div>
 
-  <div class="note" style="margin-top:6px;">
+  <div class="note">
     Hover over a model to reveal the relative weight of <strong>ACF</strong> (blue), <strong>Programme Management</strong> (amber), and <strong>Engineering</strong> (green).
-  </div>
-
-  <div class="slider-box">
-    <div class="slider-head">
-      <div class="slider-title">ACF capability over time</div>
-      <div class="slider-label" id="sliderLabel">Current assumption: developing capability</div>
-    </div>
-
-    <input type="range" min="1" max="4" step="1" value="2" id="slider">
-
-    <div class="bars" id="bars"></div>
-
-    <div class="note">
-      The slider is a strategic thought tool. It illustrates how the relative fit of each model changes as ACF capability develops over time.
-    </div>
   </div>
 
 </div>
 
 <script>
-  const fitData = {
-    A: [64, 52, 40, 28],
-    B: [40, 56, 70, 80],
-    C: [18, 34, 56, 82],
-    D: [60, 78, 88, 94]
-  };
-
-  const capabilityLabels = {
-    1: "Current assumption: emerging capability",
-    2: "Current assumption: developing capability",
-    3: "Current assumption: strong capability",
-    4: "Current assumption: mature capability"
-  };
-
   const roleHalos = {
     A: { acf: 52, pm: 74, eng: 60 },
     B: { acf: 58, pm: 42, eng: 78 },
@@ -359,66 +211,21 @@
     D: { x: 645, y: 215 }
   };
 
-  function fitText(value){
-    if (value >= 80) return "Very strong fit";
-    if (value >= 60) return "Strong fit";
-    if (value >= 45) return "Moderate fit";
-    if (value >= 30) return "Selective fit";
-    return "Limited fit";
-  }
-
-  function fitColor(value){
-    if (value >= 60) return "#1f9c52";
-    if (value >= 35) return "#c97a12";
-    return "#c2410c";
-  }
-
-  function barColor(model){
-    return {
-      A:"#c97a12",
-      B:"#9f5a0f",
-      C:"#1f9c52",
-      D:"#2557d6"
-    }[model];
-  }
-
-  function renderBars(level){
-    const bars = document.getElementById("bars");
-    const label = document.getElementById("sliderLabel");
-    label.textContent = capabilityLabels[level];
-    bars.innerHTML = "";
-
-    ["A","B","C","D"].forEach(model => {
-      const value = fitData[model][level - 1];
-      const row = document.createElement("div");
-      row.className = "bar-row";
-      row.innerHTML = `
-        <div><strong>Model ${model}</strong></div>
-        <div class="bar-track">
-          <span class="bar-fill" style="width:${value}%; background:${barColor(model)};"></span>
-        </div>
-        <div class="fit-label" style="color:${fitColor(value)}">${fitText(value)}</div>
-      `;
-      bars.appendChild(row);
-    });
-  }
-
   function drawHalos(model) {
     const haloLayer = document.getElementById("haloLayer");
     haloLayer.innerHTML = "";
-    if (model === "ALL") return;
+    if (!model) return;
 
     const pos = modelPositions[model];
     const halos = roleHalos[model];
-
     const values = [halos.acf, halos.pm, halos.eng];
     const max = Math.max(...values);
     const min = Math.min(...values);
 
     function opacityFor(value){
-      if (max === min) return 0.16;
+      if (max === min) return 0.18;
       const t = (value - min) / (max - min);
-      return 0.08 + t * 0.14;
+      return 0.04 + t * 0.28;
     }
 
     const haloData = [
@@ -443,43 +250,12 @@
     document.getElementById("haloLayer").innerHTML = "";
   }
 
-  function selectModel(model, btn=null){
-    const nodes = document.querySelectorAll(".node");
-    const buttons = document.querySelectorAll(".controls button");
-
-    nodes.forEach(node => {
-      node.classList.remove("dim");
-      if (model !== "ALL" && node.getAttribute("data-model") !== model) {
-        node.classList.add("dim");
-      }
-    });
-
-    buttons.forEach(b => b.classList.remove("active"));
-
-    if (btn) {
-      btn.classList.add("active");
-    } else {
-      const targetButton = Array.from(buttons).find(b => b.textContent.includes(model));
-      if (targetButton) targetButton.classList.add("active");
-    }
-
-    clearHalos();
-  }
-
   document.querySelectorAll(".node").forEach(node => {
     node.addEventListener("mouseenter", () => {
       drawHalos(node.getAttribute("data-model"));
     });
-    node.addEventListener("mouseleave", () => {
-      clearHalos();
-    });
+    node.addEventListener("mouseleave", clearHalos);
   });
-
-  document.getElementById("slider").addEventListener("input", (e) => {
-    renderBars(parseInt(e.target.value, 10));
-  });
-
-  renderBars(2);
 </script>
 </body>
 </html>
