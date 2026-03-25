@@ -29,7 +29,7 @@
   .container{
     max-width:1100px;
     margin:0 auto;
-    padding:6px 8px 6px; /* ↓ reduced padding */
+    padding:18px 20px 20px;
   }
 
   svg{
@@ -86,17 +86,17 @@
 
   .legend{
     display:flex;
-    gap:14px; /* slightly tighter */
+    gap:18px;
     flex-wrap:wrap;
     justify-content:center;
-    margin-top:6px; /* ↓ reduced */
+    margin-top:10px;
     font-size:13px;
   }
 
   .legend-item{
     display:flex;
     align-items:center;
-    gap:6px;
+    gap:8px;
     color:var(--legend-inactive);
     transition:.15s ease;
     font-weight:600;
@@ -107,17 +107,17 @@
   }
 
   .swatch{
-    width:10px;  /* slightly tighter */
-    height:10px;
+    width:12px;
+    height:12px;
     border-radius:50%;
     display:inline-block;
   }
 
   .note{
-    margin-top:6px; /* ↓ reduced */
-    font-size:11px;
+    margin-top:10px;
+    font-size:12px;
     color:var(--muted);
-    line-height:1.4;
+    line-height:1.5;
     text-align:center;
   }
 </style>
@@ -179,7 +179,7 @@
   </div>
 
   <div class="note">
-    Hover over a model to reveal relative role weights.
+    Hover over a model to reveal the relative weight of <strong>ACF</strong> (blue), <strong>Programme Management</strong> (amber), and <strong>Engineering</strong> (green).
   </div>
 
 </div>
@@ -214,6 +214,7 @@
     const haloTextLayer = document.getElementById("haloTextLayer");
     haloLayer.innerHTML = "";
     haloTextLayer.innerHTML = "";
+    if (!model) return;
 
     const pos = modelPositions[model];
     const halos = roleHalos[model];
@@ -222,14 +223,15 @@
     const min = Math.min(...values);
 
     function opacityFor(value){
+      if (max === min) return 0.18;
       const t = (value - min) / (max - min);
       return 0.04 + t * 0.28;
     }
 
     const haloData = [
-      { r: halos.acf, fill: `rgba(37,87,214,${opacityFor(halos.acf)})` },
-      { r: halos.pm,  fill: `rgba(201,122,18,${opacityFor(halos.pm)})` },
-      { r: halos.eng, fill: `rgba(31,156,82,${opacityFor(halos.eng)})` }
+      { key: "acf", r: halos.acf, fill: `rgba(37,87,214,${opacityFor(halos.acf)})` },
+      { key: "pm",  r: halos.pm,  fill: `rgba(201,122,18,${opacityFor(halos.pm)})` },
+      { key: "eng", r: halos.eng, fill: `rgba(31,156,82,${opacityFor(halos.eng)})` }
     ];
 
     haloData.sort((a, b) => b.r - a.r);
@@ -249,8 +251,11 @@
     text.setAttribute("x", pos.x);
     text.setAttribute("y", pos.y + outer.r - 10);
     text.setAttribute("text-anchor", "middle");
+    text.setAttribute("dominant-baseline", "middle");
     text.setAttribute("fill", "rgba(23,32,43,0.42)");
     text.setAttribute("font-size", "11");
+    text.setAttribute("font-weight", "600");
+    text.setAttribute("letter-spacing", "0.2");
     text.textContent = halos.label;
 
     haloTextLayer.appendChild(text);
