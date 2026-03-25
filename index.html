@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACF Delivery Models</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+  background: white;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* Buttons */
+.controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+button {
+  border: 1px solid #ccc;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+button.active {
+  background: #2557d6;
+  color: white;
+}
+
+/* SVG */
+svg {
+  width: 100%;
+  height: auto;
+}
+
+/* Nodes */
+.node {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.node circle {
+  stroke: white;
+  stroke-width: 3;
+}
+
+.node text {
+  fill: white;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+/* Colors */
+.A { fill: #c97a12; }
+.B { fill: #9f5a0f; }
+.C { fill: #1f9c52; }
+.D { fill: #2557d6; }
+
+.dim {
+  opacity: 0.25;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="controls">
+    <button onclick="selectModel('A')">A</button>
+    <button onclick="selectModel('B')">B</button>
+    <button onclick="selectModel('C')">C</button>
+    <button class="active" onclick="selectModel('D')">D</button>
+    <button onclick="selectModel('ALL')">All</button>
+  </div>
+
+  <svg viewBox="0 0 800 500">
+
+    <!-- Axes -->
+    <line x1="80" y1="420" x2="750" y2="420" stroke="#aaa"/>
+    <line x1="80" y1="420" x2="80" y2="60" stroke="#aaa"/>
+
+    <!-- Labels -->
+    <text x="400" y="470" font-size="14" fill="#555">ACF capability</text>
+    <text x="10" y="250" transform="rotate(-90 10 250)" font-size="14" fill="#555">ACF control</text>
+
+    <!-- Points -->
+    <g class="node A" data="A" transform="translate(250,300)" onclick="selectModel('A')">
+      <circle r="30"></circle>
+      <text>A</text>
+    </g>
+
+    <g class="node B" data="B" transform="translate(400,260)" onclick="selectModel('B')">
+      <circle r="30"></circle>
+      <text>B</text>
+    </g>
+
+    <g class="node C" data="C" transform="translate(650,120)" onclick="selectModel('C')">
+      <circle r="30"></circle>
+      <text>C</text>
+    </g>
+
+    <g class="node D" data="D" transform="translate(580,180)" onclick="selectModel('D')">
+      <circle r="30"></circle>
+      <text>D</text>
+    </g>
+
+  </svg>
+
+</div>
+
+<script>
+function selectModel(model) {
+  const nodes = document.querySelectorAll(".node");
+  const buttons = document.querySelectorAll("button");
+
+  nodes.forEach(n => {
+    n.classList.remove("dim");
+    if (model !== "ALL" && n.getAttribute("data") !== model) {
+      n.classList.add("dim");
+    }
+  });
+
+  buttons.forEach(b => b.classList.remove("active"));
+  event.target.classList.add("active");
+}
+</script>
+
+</body>
+</html>
