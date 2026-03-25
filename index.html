@@ -59,12 +59,6 @@
     font-size:12px;
   }
 
-  .quadrant-label{
-    fill:#98a2b3;
-    font-size:12px;
-    font-weight:700;
-  }
-
   .node{
     cursor:pointer;
     transition:.2s ease;
@@ -159,11 +153,6 @@
     <text class="axis-label" x="36" y="300" text-anchor="middle" transform="rotate(-90 36 300)">ACF strategic control</text>
     <text class="axis-sub" x="54" y="478" text-anchor="middle">Lower</text>
     <text class="axis-sub" x="54" y="120" text-anchor="middle">Higher</text>
-
-    <text class="quadrant-label" x="180" y="145">Externally driven</text>
-    <text class="quadrant-label" x="635" y="145">ACF-led</text>
-    <text class="quadrant-label" x="145" y="460">Earlier internal capability</text>
-    <text class="quadrant-label" x="610" y="460">More developed capability</text>
 
     <g id="haloLayer"></g>
     <g id="haloTextLayer"></g>
@@ -285,7 +274,7 @@
     const pathId = `hoverArc-${model}`;
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("id", pathId);
-    path.setAttribute("d", arcPath(pos.x, pos.y, outer.r - 8, 205, 335));
+    path.setAttribute("d", arcPath(pos.x, pos.y, outer.r - 8, 80, 100));
     path.setAttribute("fill", "none");
     haloTextLayer.appendChild(path);
 
