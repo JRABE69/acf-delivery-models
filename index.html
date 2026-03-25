@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ACF Delivery Models – Control vs Capability</title>
+<title>Delivery Models — Control vs Capability</title>
 <style>
   :root{
     --bg:#ffffff;
@@ -17,8 +17,6 @@
     --legend-inactive:#98a2b3;
   }
 
-  * { box-sizing: border-box; }
-
   body{
     margin:0;
     font-family: Inter, Arial, sans-serif;
@@ -27,9 +25,9 @@
   }
 
   .container{
-    max-width:1100px;
+    max-width:980px;
     margin:0 auto;
-    padding:18px 20px 20px;
+    padding:6px 10px 6px;
   }
 
   svg{
@@ -39,44 +37,38 @@
   }
 
   .grid-line{
-    stroke:#e7ebf1;
+    stroke:#eef1f5;
     stroke-width:1;
   }
 
   .axis-line{
     stroke:#98a2b3;
-    stroke-width:1.5;
+    stroke-width:1.4;
   }
 
   .axis-label{
     fill:var(--muted);
-    font-size:15px;
+    font-size:13px;
     font-weight:700;
   }
 
   .axis-sub{
     fill:var(--muted);
-    font-size:12px;
-  }
-
-  .node{
-    cursor:pointer;
-    transition:.2s ease;
+    font-size:10px;
   }
 
   .node circle{
     stroke:#fff;
-    stroke-width:4;
-    filter: drop-shadow(0 5px 10px rgba(0,0,0,.14));
+    stroke-width:3;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,.12));
   }
 
   .node text{
     fill:#fff;
-    font-weight:800;
-    font-size:16px;
+    font-weight:700;
+    font-size:14px;
     text-anchor:middle;
     dominant-baseline:middle;
-    pointer-events:none;
   }
 
   .A circle{ fill:var(--a); }
@@ -86,20 +78,19 @@
 
   .legend{
     display:flex;
-    gap:18px;
+    gap:12px;
     flex-wrap:wrap;
     justify-content:center;
-    margin-top:10px;
-    font-size:13px;
+    margin-top:4px;
+    font-size:12px;
   }
 
   .legend-item{
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:6px;
     color:var(--legend-inactive);
-    transition:.15s ease;
-    font-weight:600;
+    font-weight:500;
   }
 
   .legend-item.active{
@@ -107,17 +98,15 @@
   }
 
   .swatch{
-    width:12px;
-    height:12px;
+    width:10px;
+    height:10px;
     border-radius:50%;
-    display:inline-block;
   }
 
   .note{
-    margin-top:10px;
-    font-size:12px;
+    margin-top:4px;
+    font-size:10px;
     color:var(--muted);
-    line-height:1.5;
     text-align:center;
   }
 </style>
@@ -125,158 +114,125 @@
 <body>
 <div class="container">
 
-  <svg viewBox="0 0 920 620" aria-label="Delivery models chart">
-    <line class="grid-line" x1="120" y1="120" x2="820" y2="120"></line>
-    <line class="grid-line" x1="120" y1="240" x2="820" y2="240"></line>
-    <line class="grid-line" x1="120" y1="360" x2="820" y2="360"></line>
-    <line class="grid-line" x1="120" y1="480" x2="820" y2="480"></line>
+  <svg viewBox="60 80 780 440">
 
-    <line class="grid-line" x1="120" y1="480" x2="120" y2="120"></line>
-    <line class="grid-line" x1="353" y1="480" x2="353" y2="120"></line>
-    <line class="grid-line" x1="586" y1="480" x2="586" y2="120"></line>
-    <line class="grid-line" x1="820" y1="480" x2="820" y2="120"></line>
+    <!-- grid -->
+    <line class="grid-line" x1="120" y1="120" x2="780" y2="120"/>
+    <line class="grid-line" x1="120" y1="240" x2="780" y2="240"/>
+    <line class="grid-line" x1="120" y1="360" x2="780" y2="360"/>
+    <line class="grid-line" x1="120" y1="480" x2="780" y2="480"/>
 
-    <line class="axis-line" x1="120" y1="480" x2="850" y2="480"></line>
-    <line class="axis-line" x1="120" y1="480" x2="120" y2="90"></line>
+    <line class="grid-line" x1="120" y1="480" x2="120" y2="120"/>
+    <line class="grid-line" x1="350" y1="480" x2="350" y2="120"/>
+    <line class="grid-line" x1="580" y1="480" x2="580" y2="120"/>
+    <line class="grid-line" x1="780" y1="480" x2="780" y2="120"/>
 
-    <text class="axis-label" x="470" y="560" text-anchor="middle">ACF capability</text>
-    <text class="axis-sub" x="120" y="585" text-anchor="start">Lower</text>
-    <text class="axis-sub" x="820" y="585" text-anchor="end">Higher</text>
+    <!-- axes -->
+    <line class="axis-line" x1="120" y1="480" x2="820" y2="480"/>
+    <line class="axis-line" x1="120" y1="480" x2="120" y2="100"/>
 
-    <text class="axis-label" x="36" y="300" text-anchor="middle" transform="rotate(-90 36 300)">ACF strategic control</text>
-    <text class="axis-sub" x="54" y="478" text-anchor="middle">Lower</text>
-    <text class="axis-sub" x="54" y="120" text-anchor="middle">Higher</text>
+    <!-- labels -->
+    <text class="axis-label" x="460" y="520" text-anchor="middle">ACF capability</text>
+    <text class="axis-label" x="20" y="300" transform="rotate(-90 20 300)">ACF control</text>
 
+    <!-- halos -->
     <g id="haloLayer"></g>
     <g id="haloTextLayer"></g>
 
+    <!-- nodes -->
     <g class="node A" data-model="A" transform="translate(300,330)">
-      <circle r="40"></circle>
-      <text>A</text>
+      <circle r="30"></circle><text>A</text>
     </g>
 
     <g class="node B" data-model="B" transform="translate(430,285)">
-      <circle r="40"></circle>
-      <text>B</text>
+      <circle r="30"></circle><text>B</text>
     </g>
 
-    <g class="node C" data-model="C" transform="translate(720,165)">
-      <circle r="40"></circle>
-      <text>C</text>
+    <g class="node C" data-model="C" transform="translate(700,165)">
+      <circle r="30"></circle><text>C</text>
     </g>
 
-    <g class="node D" data-model="D" transform="translate(645,215)">
-      <circle r="40"></circle>
-      <text>D</text>
+    <g class="node D" data-model="D" transform="translate(620,215)">
+      <circle r="30"></circle><text>D</text>
     </g>
+
   </svg>
 
   <div class="legend">
-    <div class="legend-item" id="legend-A"><span class="swatch" style="background:#c97a12"></span> Model A – Programme Management Consultant</div>
-    <div class="legend-item" id="legend-B"><span class="swatch" style="background:#9f5a0f"></span> Model B – Engineering Integrator</div>
-    <div class="legend-item" id="legend-C"><span class="swatch" style="background:#1f9c52"></span> Model C – Development Corporation</div>
-    <div class="legend-item" id="legend-D"><span class="swatch" style="background:#2557d6"></span> Model D – Hybrid Model</div>
-  </div>
-
-  <div class="note">
-    Hover over a model to reveal the relative weight of <strong>ACF</strong> (blue), <strong>Programme Management</strong> (amber), and <strong>Engineering</strong> (green).
+    <div class="legend-item" id="legend-A"><span class="swatch" style="background:#c97a12"></span> A – PM Model</div>
+    <div class="legend-item" id="legend-B"><span class="swatch" style="background:#9f5a0f"></span> B – Engineering Model</div>
+    <div class="legend-item" id="legend-C"><span class="swatch" style="background:#1f9c52"></span> C – Corporation</div>
+    <div class="legend-item" id="legend-D"><span class="swatch" style="background:#2557d6"></span> D – Hybrid</div>
   </div>
 
 </div>
 
 <script>
   const roleHalos = {
-    A: { acf: 52, pm: 74, eng: 60, label: "PM-led" },
-    B: { acf: 58, pm: 42, eng: 78, label: "Engineering-led" },
-    C: { acf: 82, pm: 38, eng: 36, label: "ACF-led" },
-    D: { acf: 78, pm: 58, eng: 56, label: "ACF-led" }
+    A: { acf: 45, pm: 70, eng: 55, label: "PM-led" },
+    B: { acf: 50, pm: 40, eng: 75, label: "Engineering-led" },
+    C: { acf: 80, pm: 35, eng: 30, label: "ACF-led" },
+    D: { acf: 75, pm: 55, eng: 50, label: "ACF-led" }
   };
 
   const modelPositions = {
     A: { x: 300, y: 330 },
     B: { x: 430, y: 285 },
-    C: { x: 720, y: 165 },
-    D: { x: 645, y: 215 }
+    C: { x: 700, y: 165 },
+    D: { x: 620, y: 215 }
   };
-
-  function setLegendActive(model) {
-    document.querySelectorAll(".legend-item").forEach(el => el.classList.remove("active"));
-    const el = document.getElementById(`legend-${model}`);
-    if (el) el.classList.add("active");
-  }
-
-  function clearLegendActive() {
-    document.querySelectorAll(".legend-item").forEach(el => el.classList.remove("active"));
-  }
 
   function drawHalos(model) {
     const haloLayer = document.getElementById("haloLayer");
-    const haloTextLayer = document.getElementById("haloTextLayer");
+    const textLayer = document.getElementById("haloTextLayer");
     haloLayer.innerHTML = "";
-    haloTextLayer.innerHTML = "";
-    if (!model) return;
+    textLayer.innerHTML = "";
 
     const pos = modelPositions[model];
-    const halos = roleHalos[model];
-    const values = [halos.acf, halos.pm, halos.eng];
+    const h = roleHalos[model];
+    const values = [h.acf, h.pm, h.eng];
     const max = Math.max(...values);
     const min = Math.min(...values);
 
-    function opacityFor(value){
-      if (max === min) return 0.18;
-      const t = (value - min) / (max - min);
-      return 0.04 + t * 0.28;
-    }
+    const opacity = v => 0.05 + ((v - min)/(max-min||1))*0.3;
 
-    const haloData = [
-      { key: "acf", r: halos.acf, fill: `rgba(37,87,214,${opacityFor(halos.acf)})` },
-      { key: "pm",  r: halos.pm,  fill: `rgba(201,122,18,${opacityFor(halos.pm)})` },
-      { key: "eng", r: halos.eng, fill: `rgba(31,156,82,${opacityFor(halos.eng)})` }
-    ];
-
-    haloData.sort((a, b) => b.r - a.r);
-
-    haloData.forEach(h => {
-      const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      c.setAttribute("cx", pos.x);
-      c.setAttribute("cy", pos.y);
-      c.setAttribute("r", h.r);
-      c.setAttribute("fill", h.fill);
-      haloLayer.appendChild(c);
+    [
+      {r:h.acf, c:`rgba(37,87,214,${opacity(h.acf)})`},
+      {r:h.pm,  c:`rgba(201,122,18,${opacity(h.pm)})`},
+      {r:h.eng, c:`rgba(31,156,82,${opacity(h.eng)})`}
+    ]
+    .sort((a,b)=>b.r-a.r)
+    .forEach(o=>{
+      const el = document.createElementNS("http://www.w3.org/2000/svg","circle");
+      el.setAttribute("cx",pos.x);
+      el.setAttribute("cy",pos.y);
+      el.setAttribute("r",o.r);
+      el.setAttribute("fill",o.c);
+      haloLayer.appendChild(el);
     });
 
-    const outer = haloData[0];
+    const outer = Math.max(h.acf,h.pm,h.eng);
 
-    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute("x", pos.x);
-    text.setAttribute("y", pos.y + outer.r - 10);
-    text.setAttribute("text-anchor", "middle");
-    text.setAttribute("dominant-baseline", "middle");
-    text.setAttribute("fill", "rgba(23,32,43,0.42)");
-    text.setAttribute("font-size", "11");
-    text.setAttribute("font-weight", "600");
-    text.setAttribute("letter-spacing", "0.2");
-    text.textContent = halos.label;
-
-    haloTextLayer.appendChild(text);
+    const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+    t.setAttribute("x",pos.x);
+    t.setAttribute("y",pos.y + outer - 6);
+    t.setAttribute("text-anchor","middle");
+    t.setAttribute("font-size","10");
+    t.setAttribute("fill","rgba(0,0,0,0.45)");
+    t.textContent = h.label;
+    textLayer.appendChild(t);
   }
 
-  function clearHalos() {
-    document.getElementById("haloLayer").innerHTML = "";
-    document.getElementById("haloTextLayer").innerHTML = "";
+  function clearHalos(){
+    document.getElementById("haloLayer").innerHTML="";
+    document.getElementById("haloTextLayer").innerHTML="";
   }
 
-  document.querySelectorAll(".node").forEach(node => {
-    node.addEventListener("mouseenter", () => {
-      const model = node.getAttribute("data-model");
-      drawHalos(model);
-      setLegendActive(model);
-    });
-    node.addEventListener("mouseleave", () => {
-      clearHalos();
-      clearLegendActive();
-    });
+  document.querySelectorAll(".node").forEach(n=>{
+    n.addEventListener("mouseenter",()=>drawHalos(n.dataset.model));
+    n.addEventListener("mouseleave",clearHalos);
   });
 </script>
+
 </body>
 </html>
