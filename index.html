@@ -13,6 +13,8 @@
     --b:#9f5a0f;
     --c:#1f9c52;
     --d:#2557d6;
+    --legend-active:#17202b;
+    --legend-inactive:#98a2b3;
   }
 
   * { box-sizing: border-box; }
@@ -63,12 +65,6 @@
     font-weight:700;
   }
 
-  .model-callout{
-    fill:var(--text);
-    font-size:12px;
-    font-weight:700;
-  }
-
   .node{
     cursor:pointer;
     transition:.2s ease;
@@ -96,11 +92,10 @@
 
   .legend{
     display:flex;
-    gap:16px;
+    gap:18px;
     flex-wrap:wrap;
     justify-content:center;
-    margin-top:8px;
-    color:var(--muted);
+    margin-top:10px;
     font-size:13px;
   }
 
@@ -108,6 +103,13 @@
     display:flex;
     align-items:center;
     gap:8px;
+    color:var(--legend-inactive);
+    transition:.15s ease;
+    font-weight:600;
+  }
+
+  .legend-item.active{
+    color:var(--legend-active);
   }
 
   .swatch{
@@ -130,6 +132,13 @@
 <div class="container">
 
   <svg viewBox="0 0 920 620" aria-label="Delivery models chart">
+    <defs>
+      <path id="arcA" d="" />
+      <path id="arcB" d="" />
+      <path id="arcC" d="" />
+      <path id="arcD" d="" />
+    </defs>
+
     <line class="grid-line" x1="120" y1="120" x2="820" y2="120"></line>
     <line class="grid-line" x1="120" y1="240" x2="820" y2="240"></line>
     <line class="grid-line" x1="120" y1="360" x2="820" y2="360"></line>
@@ -157,37 +166,34 @@
     <text class="quadrant-label" x="610" y="460">More developed capability</text>
 
     <g id="haloLayer"></g>
+    <g id="haloTextLayer"></g>
 
     <g class="node A" data-model="A" transform="translate(300,330)">
       <circle r="40"></circle>
       <text>A</text>
     </g>
-    <text class="model-callout" x="300" y="385" text-anchor="middle">PM-led</text>
 
     <g class="node B" data-model="B" transform="translate(430,285)">
       <circle r="40"></circle>
       <text>B</text>
     </g>
-    <text class="model-callout" x="430" y="340" text-anchor="middle">Engineering-led</text>
 
     <g class="node C" data-model="C" transform="translate(720,165)">
       <circle r="40"></circle>
       <text>C</text>
     </g>
-    <text class="model-callout" x="720" y="220" text-anchor="middle">Full corporation</text>
 
     <g class="node D" data-model="D" transform="translate(645,215)">
       <circle r="40"></circle>
       <text>D</text>
     </g>
-    <text class="model-callout" x="645" y="270" text-anchor="middle">Hybrid</text>
   </svg>
 
   <div class="legend">
-    <div class="legend-item"><span class="swatch" style="background:#c97a12"></span> Model A</div>
-    <div class="legend-item"><span class="swatch" style="background:#9f5a0f"></span> Model B</div>
-    <div class="legend-item"><span class="swatch" style="background:#1f9c52"></span> Model C</div>
-    <div class="legend-item"><span class="swatch" style="background:#2557d6"></span> Model D</div>
+    <div class="legend-item" id="legend-A"><span class="swatch" style="background:#c97a12"></span> Model A – Programme Management Consultant</div>
+    <div class="legend-item" id="legend-B"><span class="swatch" style="background:#9f5a0f"></span> Model B – Engineering Integrator</div>
+    <div class="legend-item" id="legend-C"><span class="swatch" style="background:#1f9c52"></span> Model C – Development Corporation</div>
+    <div class="legend-item" id="legend-D"><span class="swatch" style="background:#2557d6"></span> Model D – Hybrid Model</div>
   </div>
 
   <div class="note">
@@ -198,10 +204,10 @@
 
 <script>
   const roleHalos = {
-    A: { acf: 52, pm: 74, eng: 60 },
-    B: { acf: 58, pm: 42, eng: 78 },
-    C: { acf: 82, pm: 38, eng: 36 },
-    D: { acf: 78, pm: 58, eng: 56 }
+    A: { acf: 52, pm: 74, eng: 60, label: "PM-led" },
+    B: { acf: 58, pm: 42, eng: 78, label: "Engineering-led" },
+    C: { acf: 82, pm: 38, eng: 36, label: "ACF-led" },
+    D: { acf: 78, pm: 58, eng: 56, label: "ACF-led" }
   };
 
   const modelPositions = {
@@ -211,9 +217,39 @@
     D: { x: 645, y: 215 }
   };
 
+  function setLegendActive(model) {
+    document.querySelectorAll(".legend-item").forEach(el => el.classList.remove("active"));
+    const el = document.getElementById(`legend-${model}`);
+    if (el) el.classList.add("active");
+  }
+
+  function clearLegendActive() {
+    document.querySelectorAll(".legend-item").forEach(el => el.classList.remove("active"));
+  }
+
+  function polarToCartesian(cx, cy, r, angle) {
+    const rad = (angle - 90) * Math.PI / 180.0;
+    return {
+      x: cx + (r * Math.cos(rad)),
+      y: cy + (r * Math.sin(rad))
+    };
+  }
+
+  function arcPath(cx, cy, r, startAngle, endAngle) {
+    const start = polarToCartesian(cx, cy, r, endAngle);
+    const end = polarToCartesian(cx, cy, r, startAngle);
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+    return [
+      "M", start.x, start.y,
+      "A", r, r, 0, largeArcFlag, 0, end.x, end.y
+    ].join(" ");
+  }
+
   function drawHalos(model) {
     const haloLayer = document.getElementById("haloLayer");
+    const haloTextLayer = document.getElementById("haloTextLayer");
     haloLayer.innerHTML = "";
+    haloTextLayer.innerHTML = "";
     if (!model) return;
 
     const pos = modelPositions[model];
@@ -229,32 +265,61 @@
     }
 
     const haloData = [
-      { r: halos.acf, fill: `rgba(37,87,214,${opacityFor(halos.acf)})` },
-      { r: halos.pm,  fill: `rgba(201,122,18,${opacityFor(halos.pm)})` },
-      { r: halos.eng, fill: `rgba(31,156,82,${opacityFor(halos.eng)})` }
+      { key: "acf", r: halos.acf, fill: `rgba(37,87,214,${opacityFor(halos.acf)})` },
+      { key: "pm",  r: halos.pm,  fill: `rgba(201,122,18,${opacityFor(halos.pm)})` },
+      { key: "eng", r: halos.eng, fill: `rgba(31,156,82,${opacityFor(halos.eng)})` }
     ];
 
-    haloData
-      .sort((a, b) => b.r - a.r)
-      .forEach(h => {
-        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        c.setAttribute("cx", pos.x);
-        c.setAttribute("cy", pos.y);
-        c.setAttribute("r", h.r);
-        c.setAttribute("fill", h.fill);
-        haloLayer.appendChild(c);
-      });
+    haloData.sort((a, b) => b.r - a.r);
+
+    haloData.forEach(h => {
+      const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("cx", pos.x);
+      c.setAttribute("cy", pos.y);
+      c.setAttribute("r", h.r);
+      c.setAttribute("fill", h.fill);
+      haloLayer.appendChild(c);
+    });
+
+    const outer = haloData[0];
+    const pathId = `hoverArc-${model}`;
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("id", pathId);
+    path.setAttribute("d", arcPath(pos.x, pos.y, outer.r - 8, 205, 335));
+    path.setAttribute("fill", "none");
+    haloTextLayer.appendChild(path);
+
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("fill", "rgba(23,32,43,0.42)");
+    text.setAttribute("font-size", "11");
+    text.setAttribute("font-weight", "600");
+    text.setAttribute("letter-spacing", "0.4");
+
+    const textPath = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
+    textPath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `#${pathId}`);
+    textPath.setAttribute("startOffset", "50%");
+    textPath.setAttribute("text-anchor", "middle");
+    textPath.textContent = halos.label;
+
+    text.appendChild(textPath);
+    haloTextLayer.appendChild(text);
   }
 
   function clearHalos() {
     document.getElementById("haloLayer").innerHTML = "";
+    document.getElementById("haloTextLayer").innerHTML = "";
   }
 
   document.querySelectorAll(".node").forEach(node => {
     node.addEventListener("mouseenter", () => {
-      drawHalos(node.getAttribute("data-model"));
+      const model = node.getAttribute("data-model");
+      drawHalos(model);
+      setLegendActive(model);
     });
-    node.addEventListener("mouseleave", clearHalos);
+    node.addEventListener("mouseleave", () => {
+      clearHalos();
+      clearLegendActive();
+    });
   });
 </script>
 </body>
